@@ -1,38 +1,44 @@
 .App {
   text-align: center;
+  font-family: sans-serif;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.bot-grid {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 1rem;
+}
+
+.bot-card {
+  background: #1e1e1e;
   color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 200px;
+  transition: 0.3s;
+  cursor: pointer;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+.bot-card:hover {
+  transform: scale(1.05);
+  background: #292929;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.bot-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: crimson;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
 }
