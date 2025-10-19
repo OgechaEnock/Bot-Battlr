@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import BotCollection from "./components/BotCollection";
 import YourBotArmy from "./components/YourBotArmy";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [bots, setBots] = useState([]);
@@ -12,7 +13,7 @@ function App() {
     fetch("http://localhost:8001/bots")
       .then((r) => r.json())
       .then(setBots)
-      .catch((err) => console.error("❌ Fetch error:", err));
+      .catch((err) => console.error("Fetch error:", err));
   }, []);
 
   // Add to army
@@ -36,14 +37,29 @@ function App() {
         setArmy(army.filter((b) => b.id !== bot.id));
         setBots(bots.filter((b) => b.id !== bot.id));
       })
-      .catch((err) => console.error("❌ Error deleting bot:", err));
+      .catch((err) => console.error("Error deleting bot:", err));
   }
 
   return (
-    <div className="App">
-      <h1>🤖 Bot Battlr</h1>
-      <YourBotArmy bots={army} onRelease={handleReleaseBot} onDelete={handleDelete} />
-      <BotCollection bots={bots} onAdd={handleAddBot} />
+    <div className="container my-4">
+      <div className="text-center mb-4">
+         <h1 className="display-5 fw-bold text-primary">🤖 Bot Battlr</h1>
+          <p className="text-secondary"></p>
+          Recruit, manage, and battle-test your intergalactic army.
+      </div>
+      <div className="row">
+        <div className="col-md-12 mb-4">
+          <YourBotArmy
+          bots={army}
+            onRelease={handleReleaseBot}
+            onDelete={handleDelete}
+                      />
+        </div>
+
+       <div className="col-md-12">
+          <BotCollection bots={bots} onAdd={handleAddBot} />
+        </div>
+        </div>
     </div>
   );
 }
