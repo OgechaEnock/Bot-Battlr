@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BotCollection from "./components/BotCollection";
 import YourBotArmy from "./components/YourBotArmy";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -17,49 +16,68 @@ function App() {
   }, []);
 
   // Add to army
-  function handleAddBot(bot) {
+  const handleEnlist = (bot) => {
     if (!army.find((b) => b.id === bot.id)) {
       setArmy([...army, bot]);
     }
-  }
+  };
 
   // Release bot
-  function handleReleaseBot(bot) {
-    setArmy(army.filter((b) => b.id !== bot.id));
-  }
+  const handleRelease = (botId) => {
+    setArmy(army.filter((bot) => bot.id !== botId));
+  };
 
   // Delete permanently
-  function handleDelete(bot) {
-    fetch(`http://localhost:8001/bots/${bot.id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setArmy(army.filter((b) => b.id !== bot.id));
-        setBots(bots.filter((b) => b.id !== bot.id));
-      })
-      .catch((err) => console.error("Error deleting bot:", err));
-  }
+  const handleDelete = async (botId) => {
+    try {
+      const res = await fetch(`http://localhost:8001/bots/${botId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete bot");
 
+      setBots(bots.filter((bot) => bot.id !== botId));
+      setArmy(army.filter((bot) => bot.id !== botId));
+    } catch (error) {
+      console.error("Error deleting bot:", error);
+    }
+  };
   return (
-    <div className="container my-4">
-      <div className="text-center mb-4">
-         <h1 className="display-5 fw-bold text-primary">🤖 Bot Battlr</h1>
-          <p className="text-secondary"></p>
-          Recruit, manage, and battle-test your intergalactic army.
-      </div>
-      <div className="row">
-        <div className="col-md-12 mb-4">
-          <YourBotArmy
-          bots={army}
-            onRelease={handleReleaseBot}
-            onDelete={handleDelete}
-                      />
+    <div className="container-fluid p-4 bg-dark text-light min-vh-100">
+      <h1 className="text-center mb-4 fw-bold text-warning">⚔️ Bot Battlr ⚙️</h1>
+
+      <div className="row g-4">
+        {/* Left Column - All Bots */}
+        <div className="col-md-8">
+          <div className="card bg-secondary shadow-lg border-0">
+            <div className="card-header text-center bg-warning text-dark fw-bold">
+              Available Bots
+            </div>
+            <div className="card-body">
+              <BotCollection
+                bots={bots}
+                onEnlist={handleEnlist}
+                onDelete={handleDelete}
+              />
+            </div>
+          </div>
         </div>
 
-       <div className="col-md-12">
-          <BotCollection bots={bots} onAdd={handleAddBot} />
+        {/* Right Column - My Army */}
+        <div className="col-md-4">
+          <div className="card bg-secondary shadow-lg border-0">
+            <div className="card-header text-center bg-success text-white fw-bold">
+              Your Bot Army
+            </div>
+            <div className="card-body">
+              <YourBotArmy
+                army={army}
+                onRelease={handleRelease}
+                onDelete={handleDelete}
+              />
+            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
   );
 }
