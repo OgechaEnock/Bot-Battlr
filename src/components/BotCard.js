@@ -1,39 +1,51 @@
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./BotCard.css";
 
-function BotCard({ bot, onClick, onDelete, showDelete }) {
+function BotCard({ bot, onEnlist, onRelease, onDelete, isArmy }) {
   return (
-    <div
-      className="card h-100 bot-card shadow-sm border-0"
-      onClick={onClick}
-      style={{ cursor: "pointer" }}
-    >
+    <div className="card bot-card text-center shadow-lg bg-dark text-light border-warning position-relative">
       <img
         src={bot.avatar_url}
-        className="card-img-top"
         alt={bot.name}
-        style={{ borderRadius: "12px 12px 0 0" }}
+        className="card-img-top bot-img"
       />
-      <div className="card-body text-center">
-        <h5 className="card-title fw-bold text-dark">{bot.name}</h5>
-        <p className="card-text text-muted">{bot.bot_class}</p>
-        <div className="d-flex justify-content-center gap-3 mb-2">
-          <span>⚔️ {bot.damage}</span>
-          <span>🛡️ {bot.armor}</span>
-          <span>❤️ {bot.health}</span>
-        </div>
-        {showDelete && (
+      <div className="card-body">
+        <h5 className="card-title fw-bold text-warning">{bot.name}</h5>
+        <p className="card-text small text-secondary">
+          <strong>Class:</strong> {bot.bot_class}
+          <br />
+          <strong>Health:</strong> {bot.health}
+          <br />
+          <strong>Damage:</strong> {bot.damage}
+          <br />
+          <strong>Armor:</strong> {bot.armor}
+        </p>
+
+        {!isArmy ? (
           <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
+            className="btn btn-outline-warning btn-sm w-100"
+            onClick={() => onEnlist(bot)}
           >
-            ❌ Discharge
+            Enlist Bot
+          </button>
+        ) : (
+          <button
+            className="btn btn-outline-success btn-sm w-100"
+            onClick={() => onRelease(bot.id)}
+          >
+            Release Bot
           </button>
         )}
       </div>
+
+      {/* Delete Button (X) */}
+      <button
+        className="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+        onClick={() => onDelete(bot.id)}
+      >
+        ✖
+      </button>
     </div>
   );
 }
