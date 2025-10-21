@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BotCollection from "./components/BotCollection";
 import YourBotArmy from "./components/YourBotArmy";
-import "./App.css";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -11,8 +11,8 @@ function App() {
   // Fetch bots
   useEffect(() => {
     fetch("http://localhost:8001/bots")
-      .then((r) => r.json())
-      .then(setBots)
+      .then((res) => res.json())
+      .then((data) => setBots(data))
       .catch((err) => console.error("Fetch error:", err));
   }, []);
 
