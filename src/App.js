@@ -2,10 +2,25 @@ import React, { useState, useEffect } from "react";
 import BotCollection from "./components/BotCollection";
 import YourBotArmy from "./components/YourBotArmy";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import SortBar from "./components/SortBar";
 function App() {
   const [bots, setBots] = useState([]);
   const [army, setArmy] = useState([]);
+  const [sortBy, setSortBy] = useState("");
+
+  // Sort handle
+  const handleSort = (type) => {
+    setSortBy(type);
+  };
+  
+  const sortedBots = [...bots].sort((a, b) => {
+    if (sortBy === "health") return b.health - a.health;
+    if (sortBy === "damage") return b.damage - a.damage;
+    if (sortBy === "armor") return b.armor - a.armor;
+    return 0;
+  });
+
+
 
   // Fetch bots
   useEffect(() => {
@@ -42,39 +57,34 @@ function App() {
     }
   };
   return (
-    <div className="container-fluid p-4 bg-dark text-light min-vh-100">
-      <h1 className="text-center mb-4 fw-bold text-warning">⚔️ Bot Battlr ⚙️</h1>
+    <div className="container py-4">
+      <h1 className="text-center text-primary mb-4 fw-bold">🤖 Bot Battlr</h1>
 
-      <div className="row g-4">
-        {/* Left Column - All Bots */}
-        <div className="col-md-8">
-          <div className="card bg-secondary shadow-lg border-0">
-            <div className="card-header text-center bg-warning text-dark fw-bold">
-              Available Bots
-            </div>
-            <div className="card-body">
-              <BotCollection
-                bots={bots}
-                onEnlist={handleEnlist}
-                onDelete={handleDelete}
-              />
-            </div>
+      {/* Sorting Dropdown */}
+      <SortBar onSort={handleSort} />
+
+      <div className="row mt-4">
+        
+        <div className="col-md-8 mb-4">
+          <div className="card shadow border-0 p-3 bg-light">
+            <h4 className="text-center mb-3 text-dark">Available Bots</h4>
+            <BotCollection
+              bots={sortedBots}
+              onEnlist={handleEnlist}
+              onDelete={handleDelete}
+            />
           </div>
         </div>
 
-        {/* Right Column - My Army */}
+        {/* Right Column - Bot Army */}
         <div className="col-md-4">
-          <div className="card bg-secondary shadow-lg border-0">
-            <div className="card-header text-center bg-success text-white fw-bold">
-              Your Bot Army
-            </div>
-            <div className="card-body">
-              <YourBotArmy
-                army={army}
-                onRelease={handleRelease}
-                onDelete={handleDelete}
-              />
-            </div>
+          <div className="card shadow border-0 p-3 bg-dark text-white">
+            <h4 className="text-center mb-3">My Bot Army </h4>
+            <YourBotArmy
+              army={army}
+              onRelease={handleRelease}
+              onDelete={handleDelete}
+            />
           </div>
         </div>
       </div>
